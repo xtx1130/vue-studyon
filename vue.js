@@ -356,7 +356,7 @@ var config = {
 /* globals MutationObserver */
 
 // can we use __proto__?
-var hasProto = '__proto__' in {};
+var hasProto = '__proto__' in {};//@xtx 判断proto是否存在
 
 // Browser environment sniffing
 var inBrowser = typeof window !== 'undefined';
@@ -371,7 +371,7 @@ var isChrome = UA && /chrome\/\d+/.test(UA) && !isEdge;
 // this needs to be lazy-evaled because vue may be required before
 // vue-server-renderer can set VUE_ENV
 var _isServer;
-var isServerRendering = function () {
+var isServerRendering = function () {//通过window和global做服务端判断
   if (_isServer === undefined) {
     /* istanbul ignore if */
     if (!inBrowser && typeof global !== 'undefined') {
@@ -400,7 +400,7 @@ var hasSymbol =
 /**
  * Defer a task to execute it asynchronously.
  */
-var nextTick = (function () {
+var nextTick = (function () {//@xtx 异步队列  @return queueNextTick:Function(argv:[function]):Promise
   var callbacks = [];
   var pending = false;
   var timerFunc;
@@ -421,7 +421,7 @@ var nextTick = (function () {
   // completely stops working after triggering a few times... so, if native
   // Promise is available, we will use it:
   /* istanbul ignore if */
-  if (typeof Promise !== 'undefined' && isNative(Promise)) {
+  if (typeof Promise !== 'undefined' && isNative(Promise)) {//@xtx 做异步事件队列，有promise优先promise
     var p = Promise.resolve();
     var logError = function (err) { console.error(err); };
     timerFunc = function () {
@@ -433,7 +433,7 @@ var nextTick = (function () {
       // "force" the microtask queue to be flushed by adding an empty timer.
       if (isIOS) { setTimeout(noop); }
     };
-  } else if (typeof MutationObserver !== 'undefined' && (
+  } else if (typeof MutationObserver !== 'undefined' && (//@xtx 有dom监控优先dom监控，通过修改textNode.data来触发
     isNative(MutationObserver) ||
     // PhantomJS and iOS 7.x
     MutationObserver.toString() === '[object MutationObserverConstructor]'
@@ -444,7 +444,7 @@ var nextTick = (function () {
     var observer = new MutationObserver(nextTickHandler);
     var textNode = document.createTextNode(String(counter));
     observer.observe(textNode, {
-      characterData: true
+      characterData: true//监听节点变动
     });
     timerFunc = function () {
       counter = (counter + 1) % 2;
@@ -453,7 +453,7 @@ var nextTick = (function () {
   } else {
     // fallback to setTimeout
     /* istanbul ignore next */
-    timerFunc = function () {
+    timerFunc = function () {//@xtx没有promise和节点监控直接settimeout拖到队列尾部触发
       setTimeout(nextTickHandler, 0);
     };
   }
