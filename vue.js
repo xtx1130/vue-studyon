@@ -478,7 +478,7 @@ var nextTick = (function () {//@xtx 异步队列  @return queueNextTick:Function
 
 var _Set;
 /* istanbul ignore if */
-if (typeof Set !== 'undefined' && isNative(Set)) {
+if (typeof Set !== 'undefined' && isNative(Set)) {//@xtx Set方法兼容处理 ,Set: Object={key: Bollean=true}
   // use native Set when available.
   _Set = Set;
 } else {
@@ -503,7 +503,7 @@ if (typeof Set !== 'undefined' && isNative(Set)) {
 
 var perf;
 
-{
+{//@xtx {}用于语义声明，语法分析阶段 performance存在判断
   perf = inBrowser && window.performance;
   if (perf && (!perf.mark || !perf.measure)) {
     perf = undefined;
@@ -512,7 +512,7 @@ var perf;
 
 /*  */
 
-var emptyObject = Object.freeze({});
+var emptyObject = Object.freeze({});//@xtx 创建不可修改的空对象
 
 /**
  * Check if a string starts with $ or _
