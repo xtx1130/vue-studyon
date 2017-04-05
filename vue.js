@@ -525,7 +525,7 @@ function isReserved (str) {
 /**
  * Define a property.
  */
-function def (obj, key, val, enumerable) {
+function def (obj, key, val, enumerable) {//@xtx define定义，注意一下可否枚举
   Object.defineProperty(obj, key, {
     value: val,
     enumerable: !!enumerable,
@@ -618,7 +618,7 @@ var uid$1 = 0;
  * directives subscribing to it.
  */
 var Dep = function Dep () {
-  this.id = uid$1++;
+  this.id = uid$1++;//@xtx 记录每个的唯一uid。
   this.subs = [];
 };
 
@@ -665,7 +665,7 @@ function popTarget () {
  */
 
 var arrayProto = Array.prototype;
-var arrayMethods = Object.create(arrayProto);[
+var arrayMethods = Object.create(arrayProto);[//@xtx Object.create 创建了一个对象包括Array中的所有方法
   'push',
   'pop',
   'shift',
@@ -674,7 +674,7 @@ var arrayMethods = Object.create(arrayProto);[
   'sort',
   'reverse'
 ]
-.forEach(function (method) {
+.forEach(function (method) {//@xtx attention 对数组方法做监听，监听改变
   // cache original method
   var original = arrayProto[method];
   def(arrayMethods, method, function mutator () {
@@ -703,7 +703,7 @@ var arrayMethods = Object.create(arrayProto);[
     }
     if (inserted) { ob.observeArray(inserted); }
     // notify change
-    ob.dep.notify();
+    ob.dep.notify();//@xtx 这个dep是在下面Observer中定义的
     return result
   });
 });
@@ -733,7 +733,7 @@ var Observer = function Observer (value) {
   this.value = value;
   this.dep = new Dep();
   this.vmCount = 0;
-  def(value, '__ob__', this);
+  def(value, '__ob__', this);//@xtx __ob__就是this，方便上面数组监听那里取值
   if (Array.isArray(value)) {
     var augment = hasProto
       ? protoAugment
@@ -825,7 +825,7 @@ function defineReactive$$1 (
   key,
   val,
   customSetter
-) {
+) {//@xtx 通过defineProperty给元素添加set和get监听，供Obsever调用
   var dep = new Dep();
 
   var property = Object.getOwnPropertyDescriptor(obj, key);
