@@ -1145,7 +1145,7 @@ function checkComponents (options) {
     }
   }
 }
-
+//@xtxmark
 /**
  * Ensure all props option syntax are normalized into the
  * Object-based format.
