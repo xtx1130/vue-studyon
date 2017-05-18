@@ -1021,14 +1021,14 @@ strats.data = function (
     // merged result of both functions... no need to
     // check if parentVal is a function here because
     // it has to be a function to pass previous merges.
-    return function mergedDataFn () {
+    return function mergedDataFn () {//@xtx merge for data,pay attention to the call method,there for data must be a function
       return mergeData(
         childVal.call(this),
         parentVal.call(this)
       )
     }
   } else if (parentVal || childVal) {
-    return function mergedInstanceDataFn () {
+    return function mergedInstanceDataFn () {//@xtx arguments:function,argv:object
       // instance merge
       var instanceData = typeof childVal === 'function'
         ? childVal.call(vm)
