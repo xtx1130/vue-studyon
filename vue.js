@@ -77,7 +77,7 @@ function hasOwn (obj, key) {
 /**
  * Check if value is primitive
  */
-function isPrimitive (value) {//@xtx 原始值判断
+function isPrimitive (value) {//@xtx 原始值判断 数字或字符串
   return typeof value === 'string' || typeof value === 'number'
 }
 
@@ -1715,7 +1715,7 @@ function mergeVNodeHook (def, hookKey, hook) {//对新旧的invoker做merge操�
 
 // The template compiler attempts to minimize the need for normalization by
 // statically analyzing the template at compile time.
-//
+
 // For plain HTML markup, normalization can be completely skipped because the
 // generated render function is guaranteed to return Array<VNode>. There are
 // two cases where extra normalization is needed:
@@ -1725,7 +1725,7 @@ function mergeVNodeHook (def, hookKey, hook) {//对新旧的invoker做merge操�
 // normalization is needed - if any child is an Array, we flatten the whole
 // thing with Array.prototype.concat. It is guaranteed to be only 1-level deep
 // because functional components already normalize their own children.
-function simpleNormalizeChildren (children) {
+function simpleNormalizeChildren (children) {//把所有子节点加入到一个数组里面
   for (var i = 0; i < children.length; i++) {
     if (Array.isArray(children[i])) {
       return Array.prototype.concat.apply([], children)
@@ -1738,10 +1738,10 @@ function simpleNormalizeChildren (children) {
 // e.g. <template>, <slot>, v-for, or when the children is provided by user
 // with hand-written render functions / JSX. In such cases a full normalization
 // is needed to cater to all possible types of children values.
-function normalizeChildren (children) {
-  return isPrimitive(children)
-    ? [createTextVNode(children)]
-    : Array.isArray(children)
+function normalizeChildren (children) {//子节点嵌套子节点的情况
+  return isPrimitive(children)//如果是简单的string类型
+    ? [createTextVNode(children)]//直接创建文本节点就好了
+    : Array.isArray(children)//子节点也包含子节点，数组类型
       ? normalizeArrayChildren(children)
       : undefined
 }
@@ -1754,7 +1754,7 @@ function normalizeArrayChildren (children, nestedIndex) {
     if (c == null || typeof c === 'boolean') { continue }
     last = res[res.length - 1];
     //  nested
-    if (Array.isArray(c)) {
+    if (Array.isArray(c)) {//在这里判断是否子节点嵌套子节点，有嵌套直接递归调用
       res.push.apply(res, normalizeArrayChildren(c, ((nestedIndex || '') + "_" + i)));
     } else if (isPrimitive(c)) {
       if (last && last.text) {
@@ -1798,7 +1798,7 @@ function initEvents (vm) {
 
 var target;
 
-function add (event, fn, once$$1) {
+function add (event, fn, once$$1) {//传参给updateListeners用的
   if (once$$1) {
     target.$once(event, fn);
   } else {
@@ -1819,7 +1819,7 @@ function updateComponentListeners (
   updateListeners(listeners, oldListeners || {}, add, remove$1, vm);
 }
 
-function eventsMixin (Vue) {
+function eventsMixin (Vue) {//对vue的prototype做事件上的扩展
   var hookRE = /^hook:/;
   Vue.prototype.$on = function (event, fn) {
     var this$1 = this;
