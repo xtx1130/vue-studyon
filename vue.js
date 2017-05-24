@@ -4735,13 +4735,14 @@ function createPatchFunction (backend) {//虚拟dom(Vnode)新旧对比的diff函
         oldEndVnode = oldCh[--oldEndIdx];
         newStartVnode = newCh[++newStartIdx];
       } else {
-        if (isUndef(oldKeyToIdx)) { oldKeyToIdx = createKeyToOldIdx(oldCh, oldStartIdx, oldEndIdx); }
-        idxInOld = isDef(newStartVnode.key) ? oldKeyToIdx[newStartVnode.key] : null;
-        if (isUndef(idxInOld)) { // New element
+        //使用key进行比较
+        if (isUndef(oldKeyToIdx)) { oldKeyToIdx = createKeyToOldIdx(oldCh, oldStartIdx, oldEndIdx); }//创建老的key-index列表
+        idxInOld = isDef(newStartVnode.key) ? oldKeyToIdx[newStartVnode.key] : null;//如果新的元素的key存在，就在老的列表中找出来
+        if (isUndef(idxInOld)) { // New element老的表里找不到，说明是新加进来的元素
           createElm(newStartVnode, insertedVnodeQueue, parentElm, oldStartVnode.elm);
-          newStartVnode = newCh[++newStartIdx];
-        } else {
-          elmToMove = oldCh[idxInOld];
+          newStartVnode = newCh[++newStartIdx];//这个新结点过了，开始下一个
+        } else {//卧槽，找到了 说明旧节点存在啊
+          elmToMove = oldCh[idxInOld];//指针移到旧节点
           /* istanbul ignore if */
           if ("development" !== 'production' && !elmToMove) {
             warn(
@@ -4749,13 +4750,14 @@ function createPatchFunction (backend) {//虚拟dom(Vnode)新旧对比的diff函
               'Make sure each v-for item has a unique key.'
             );
           }
-          if (sameVnode(elmToMove, newStartVnode)) {
-            patchVnode(elmToMove, newStartVnode, insertedVnodeQueue);
-            oldCh[idxInOld] = undefined;
-            canMove && nodeOps.insertBefore(parentElm, newStartVnode.elm, oldStartVnode.elm);
-            newStartVnode = newCh[++newStartIdx];
+          if (sameVnode(elmToMove, newStartVnode)) {//如果旧节点和新的开始节点一致的话
+            patchVnode(elmToMove, newStartVnode, insertedVnodeQueue);//来patch
+            oldCh[idxInOld] = undefined;//旧节点和新节点一致的设置成undefined
+            canMove && nodeOps.insertBefore(parentElm, newStartVnode.elm, oldStartVnode.elm);//把新的开始节点挪到旧的开始节点，实现更新
+            newStartVnode = newCh[++newStartIdx];//新节点+1继续递归
           } else {
             // same key but different element. treat as new element
+            //key-index中有，但是vnode不一致，作为新节点创建，插入到旧的节点前面（看前面的createElm参数，有refElm的话插到他的前面）
             createElm(newStartVnode, insertedVnodeQueue, parentElm, oldStartVnode.elm);
             newStartVnode = newCh[++newStartIdx];
           }
