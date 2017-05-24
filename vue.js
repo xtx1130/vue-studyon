@@ -1145,7 +1145,6 @@ function checkComponents (options) {
     }
   }
 }
-//@xtxmark
 /**
  * Ensure all props option syntax are normalized into the
  * Object-based format.
@@ -1485,13 +1484,13 @@ var initProxy;
 
   if (hasProxy) {
     var isBuiltInModifier = makeMap('stop,prevent,self,ctrl,shift,alt,meta');
-    config.keyCodes = new Proxy(config.keyCodes, {
-      set: function set (target, key, value) {
-        if (isBuiltInModifier(key)) {
+    config.keyCodes = new Proxy(config.keyCodes, {//对keyCodes使用代理 proxy详见 https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Proxy
+      set: function set (target, key, value) {//主要对keyCodes加验证，看传进来的值是否在isBuiltInModifier这个map中
+        if (isBuiltInModifier(key)) {//在的话直接返回warn和false
           warn(("Avoid overwriting built-in modifier in config.keyCodes: ." + key));
           return false
         } else {
-          target[key] = value;
+          target[key] = value;//不在的话把值写进去
           return true
         }
       }
@@ -1518,7 +1517,7 @@ var initProxy;
     }
   };
 
-  initProxy = function initProxy (vm) {
+  initProxy = function initProxy (vm) {//TODO:留着下面看完了翻译
     if (hasProxy) {
       // determine which proxy handler to use
       var options = vm.$options;
@@ -1534,7 +1533,7 @@ var initProxy;
 
 /*  */
 
-var VNode = function VNode (
+var VNode = function VNode (//对标签初始化
   tag,
   data,
   children,
@@ -1580,7 +1579,7 @@ var createEmptyVNode = function () {
   return node
 };
 
-function createTextVNode (val) {
+function createTextVNode (val) {//字面意思，创建文字节点
   return new VNode(undefined, undefined, undefined, String(val))
 }
 
@@ -2594,7 +2593,7 @@ var sharedPropertyDefinition = {
   set: noop
 };
 
-function proxy (target, sourceKey, key) {
+function proxy (target, sourceKey, key) {//修改target的key属性,使得其能读到sourceKey的key属性
   sharedPropertyDefinition.get = function proxyGetter () {
     return this[sourceKey][key]
   };
