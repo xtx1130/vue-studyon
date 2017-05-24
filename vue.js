@@ -4764,10 +4764,12 @@ function createPatchFunction (backend) {//虚拟dom(Vnode)新旧对比的diff函
         }
       }
     }
+    //递归遍历结束后，oldStartIdx > oldEndIdx，也就是oldch已经到头了，但是newch还没有到头，这样，newch剩下的都是新的节点，创建之
     if (oldStartIdx > oldEndIdx) {
       refElm = isUndef(newCh[newEndIdx + 1]) ? null : newCh[newEndIdx + 1].elm;
       addVnodes(parentElm, refElm, newCh, newStartIdx, newEndIdx, insertedVnodeQueue);
     } else if (newStartIdx > newEndIdx) {
+      //新的到头了，旧的没到头，说明旧的都是老节点了，删了
       removeVnodes(parentElm, oldCh, oldStartIdx, oldEndIdx);
     }
   }
