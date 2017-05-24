@@ -1976,7 +1976,7 @@ function initLifecycle (vm) {
 }
 
 function lifecycleMixin (Vue) {
-  Vue.prototype._update = function (vnode, hydrating) {//__patch__函数的实现在4426行
+  Vue.prototype._update = function (vnode, hydrating) {//__patch__虚拟dom+更新的函数的实现在4426行
     var vm = this;
     if (vm._isMounted) {//如果挂载的话直接emit运行beforeupdate的hook
       callHook(vm, 'beforeUpdate');
