@@ -1819,8 +1819,8 @@ function updateComponentListeners (
   updateListeners(listeners, oldListeners || {}, add, remove$1, vm);
 }
 
-function eventsMixin (Vue) {//对vue的prototype做事件上的扩展
-  var hookRE = /^hook:/;
+function eventsMixin (Vue) {//对vue的prototype做事件上的扩展，所有的事件都挂在vm._events下面
+  var hookRE = /^hook:/;//具有hook:event形式的都是在实例化的时候就注册的事件？好像是这样的，暂时不确定
   Vue.prototype.$on = function (event, fn) {
     var this$1 = this;
 
@@ -1880,7 +1880,7 @@ function eventsMixin (Vue) {//对vue的prototype做事件上的扩展
     return vm
   };
 
-  Vue.prototype.$emit = function (event) {
+  Vue.prototype.$emit = function (event) {//一个event对应一个cbs数组，循环apply调用
     var vm = this;
     var cbs = vm._events[event];
     if (cbs) {
@@ -1902,7 +1902,7 @@ function eventsMixin (Vue) {//对vue的prototype做事件上的扩展
 function resolveSlots (
   children,
   context
-) {
+) {//感觉是把child揉到slot中
   var slots = {};
   if (!children) {
     return slots
