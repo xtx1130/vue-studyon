@@ -1976,9 +1976,9 @@ function initLifecycle (vm) {
 }
 
 function lifecycleMixin (Vue) {
-  Vue.prototype._update = function (vnode, hydrating) {
+  Vue.prototype._update = function (vnode, hydrating) {//__patch__函数的实现在4426行
     var vm = this;
-    if (vm._isMounted) {
+    if (vm._isMounted) {//如果挂载的话直接emit运行beforeupdate的hook
       callHook(vm, 'beforeUpdate');
     }
     var prevEl = vm.$el;
@@ -4423,16 +4423,16 @@ function createKeyToOldIdx (children, beginIdx, endIdx) {
   return map
 }
 
-function createPatchFunction (backend) {
+function createPatchFunction (backend) {//虚拟dom的创建操作
   var i, j;
   var cbs = {};
 
-  var modules = backend.modules;
-  var nodeOps = backend.nodeOps;
+  var modules = backend.modules;//包含一系列属性，class（klass），attr（attrs）等
+  var nodeOps = backend.nodeOps;//调用的Object.freeze返回的冻结对象（readonly），包含基本的dom操作
 
-  for (i = 0; i < hooks$1.length; ++i) {
+  for (i = 0; i < hooks$1.length; ++i) {//hooks$1 = ['create', 'activate', 'update', 'remove', 'destroy'];
     cbs[hooks$1[i]] = [];
-    for (j = 0; j < modules.length; ++j) {
+    for (j = 0; j < modules.length; ++j) {//通过hooks的属性值，对modules进行分类
       if (modules[j][hooks$1[i]] !== undefined) { cbs[hooks$1[i]].push(modules[j][hooks$1[i]]); }
     }
   }
@@ -4441,7 +4441,7 @@ function createPatchFunction (backend) {
     return new VNode(nodeOps.tagName(elm).toLowerCase(), {}, [], undefined, elm)
   }
 
-  function createRmCb (childElm, listeners) {
+  function createRmCb (childElm, listeners) {//创建需要删除的节点，如果这个节点没有监听者则删除
     function remove$$1 () {
       if (--remove$$1.listeners === 0) {
         removeNode(childElm);
