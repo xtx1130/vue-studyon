@@ -1547,7 +1547,7 @@ var VNode = function VNode (//对标签初始化
   this.children = children;
   this.text = text;
   this.elm = elm;
-  this.ns = undefined;
+  this.ns = undefined;//TODO:nextsiblings?不确定中
   this.context = context;
   this.functionalContext = undefined;
   this.key = data && data.key;
@@ -1570,7 +1570,7 @@ prototypeAccessors.child.get = function () {
   return this.componentInstance
 };
 
-Object.defineProperties( VNode.prototype, prototypeAccessors );
+Object.defineProperties( VNode.prototype, prototypeAccessors );//不知道这有啥用，直接挂到VNode上不行么
 
 var createEmptyVNode = function () {
   var node = new VNode();
@@ -1626,7 +1626,7 @@ var normalizeEvent = cached(function (name) {
   }
 });
 
-function createFnInvoker (fns) {
+function createFnInvoker (fns) {//fns 不是函数数组就是函数，通过触发invoker进行调用，fns挂到invoker上了哈哈（阿里友盟面试题有个类似的）
   function invoker () {
     var arguments$1 = arguments;
 
@@ -1644,7 +1644,7 @@ function createFnInvoker (fns) {
   return invoker
 }
 
-function updateListeners (
+function updateListeners (//更新对元素的监听
   on,
   oldOn,
   add,
@@ -1661,17 +1661,17 @@ function updateListeners (
         "Invalid handler for event \"" + (event.name) + "\": got " + String(cur),
         vm
       );
-    } else if (!old) {
-      if (!cur.fns) {
-        cur = on[name] = createFnInvoker(cur);
+    } else if (!old) {//新来的方法
+      if (!cur.fns) {//fns函数触发队列不存在
+        cur = on[name] = createFnInvoker(cur);//给cur创建invoker
       }
       add(event.name, cur, event.once, event.capture);
-    } else if (cur !== old) {
+    } else if (cur !== old) {//存在老方法，新方法是新的，做下交换，old就变成新的了
       old.fns = cur;
       on[name] = old;
     }
   }
-  for (name in oldOn) {
+  for (name in oldOn) {//新的方法舍弃了老的一些方法，做remove操作
     if (!on[name]) {
       event = normalizeEvent(name);
       remove$$1(event.name, oldOn[name], event.capture);
@@ -1681,7 +1681,7 @@ function updateListeners (
 
 /*  */
 
-function mergeVNodeHook (def, hookKey, hook) {
+function mergeVNodeHook (def, hookKey, hook) {//对新旧的invoker做merge操作
   var invoker;
   var oldHook = def[hookKey];
 
