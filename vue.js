@@ -1981,7 +1981,6 @@ function lifecycleMixin (Vue) {
     if (vm._isMounted) {//如果挂载的话直接emit运行beforeupdate的hook
       callHook(vm, 'beforeUpdate');
     }
-    //@xtx marked
     var prevEl = vm.$el;
     var prevVnode = vm._vnode;
     var prevActiveInstance = activeInstance;
@@ -2037,7 +2036,7 @@ function lifecycleMixin (Vue) {
     }
     // teardown watchers
     if (vm._watcher) {
-      vm._watcher.teardown();
+      vm._watcher.teardown();//拆除监视器
     }
     var i = vm._watchers.length;
     while (i--) {
@@ -2061,7 +2060,7 @@ function lifecycleMixin (Vue) {
     vm.__patch__(vm._vnode, null);
   };
 }
-
+//@xtx marked
 function mountComponent (
   vm,
   el,
