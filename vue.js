@@ -1981,6 +1981,7 @@ function lifecycleMixin (Vue) {
     if (vm._isMounted) {//如果挂载的话直接emit运行beforeupdate的hook
       callHook(vm, 'beforeUpdate');
     }
+    //@xtx marked
     var prevEl = vm.$el;
     var prevVnode = vm._vnode;
     var prevActiveInstance = activeInstance;
